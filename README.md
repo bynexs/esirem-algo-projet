@@ -1,2 +1,4 @@
 # TpBlackJack
-TP en Algo sur le BlackJack
+TP en Algo sur le BlackJack.
+
+
