@@ -1,11 +1,11 @@
-/******************************************************************************
+#include <stdio.h> /*Autorise l'emploi de printf et de scanf.*/
 
-                            Online C Compiler.
-                Code, Compile, Run and Debug C program online.
-Write your code in this editor and press "Run" button to compile and execute it.
 
-*******************************************************************************/
+struct Carte{
 
-#include <stdio.h>
+    int valeur; 
+    enum enum_color type;
+
+};
 
 enum enum_color {CARREAU, PIQUE, COEUR, TREFLE};
