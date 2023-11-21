@@ -8,8 +8,4 @@ struct Carte{
 
 };
 
-int main(void)
-{
-    
-    return 0;
-}
+enum enum_color {CARREAU, PIQUE, COEUR, TREFLE};
