@@ -66,3 +66,26 @@ void affichage_main(struct main main[]){
         printf("Valeur : %d | Couleur : %d\n", main.valeur[i], main.type[i]);
     }
 }
+
+
+
+int traitement_saisie(char str[]){
+
+    if(str=="CARTE" || str=="HIT"){
+        return 0;
+    }
+    else if(str=="ARRETER" || str=="STAND"){
+        return 1;
+    }
+    else if(str=="DOUBLE"){
+        return 2;
+    }
+    else if(str=="ABANDONNER" || str=="SURREND"){
+        return 3;
+    }
+    else{
+        return 10; //Pour indiquer que l'utilisateur a rentré une mauvaise saisie
+    }
+
+}
+
