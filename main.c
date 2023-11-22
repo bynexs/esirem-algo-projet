@@ -31,6 +31,13 @@ int CreationDeck(){
     struct Carte carte[];
 };
 
+int Init(){
+  
+    struct listeCartes mainbanque;
+    struct joueur player;
+    CreationDeck();
+}
+
 
 typedef struct joueur{
     struct listeCartes;
