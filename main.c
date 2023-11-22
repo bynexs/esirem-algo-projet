@@ -11,9 +11,15 @@ struct Carte{
 };
 
 typedef struct listeCartes{
-
     struct Carte carte[52];
 };
+
+
+typedef struct joueur{
+    struct listeCartes listeCartes;
+    int montant; 
+};
+
 
 int CreationDeck(){
     struct listeCartes listecarte;
@@ -28,8 +34,7 @@ int CreationDeck(){
         }
     }
 }
-    struct Carte carte[];
-};
+
 
 int Init(){
   
@@ -39,8 +44,12 @@ int Init(){
 }
 
 
-typedef struct joueur{
-    struct listeCartes;
-    int montant;
+void affichage_main(struct main main[]){
+    int i=0; 
     
-};
+    for(i=0;i<sizeof(main)+1;i++){
+        printf("Voici la carte %d :\n", i+1);
+        printf("Valeur : %d | Couleur : %d\n", main.valeur[i], main.type[i]);
+    }
+}
+
