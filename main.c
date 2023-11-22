@@ -43,6 +43,20 @@ int Init(){
     CreationDeck();
 }
 
+int Count(struct carte premierecarte){
+    somme = premierecarte.valeur;
+    struct carte *nouvellecarte;
+    nouvellecarte = premierecarte.cartenext;
+    while (nouvellecarte != NULL ){
+        if (nouvellecarte->valeur > 9){;
+            somme = somme + 10;
+        };
+        if else(){
+            somme = somme + nouvellecarte->valeur;
+        };
+    }
+}
+
 
 void affichage_main(struct main main[]){
     int i=0; 
@@ -52,6 +66,8 @@ void affichage_main(struct main main[]){
         printf("Valeur : %d | Couleur : %d\n", main.valeur[i], main.type[i]);
     }
 }
+
+
 
 int traitement_saisie(char str[]){
 
@@ -72,3 +88,4 @@ int traitement_saisie(char str[]){
     }
 
 }
+
