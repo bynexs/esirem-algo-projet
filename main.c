@@ -1,8 +1,9 @@
+
 #include <stdio.h> /*Autorise l'emploi de printf et de scanf.*/
 #include <stdlib.h>
 
 enum enum_color {CARREAU, PIQUE, COEUR, TREFLE};
-int compteur = 0;
+enum enum_joueur {CARTE=0,HIT=0,ARRETER=1,STAND=1,DOUBLE=2,ABANDONNER=3,SURREND=3};
 
 struct Carte{
     int valeur;
@@ -35,19 +36,22 @@ void append(struct listeCartes** head, int valeur, int type) {
         struct listeCartes* current = *head;
         while (current->cartenext != NULL) {
             current = current->cartenext;
+
         }
         current->cartenext = newNode;
     }
 }
 
-struct listeCartes* CreationDeck(){
-    struct listeCartes* myList = NULL;
-    for(int i = 0; i < 4; i++){
-        for(int j = 1; j <= 13; j++){
-            append(&myList, j, i);
-        }
+
+
+void afficherList(struct listeCartes* tete){
+    struct listeCartes* courant = tete;
+    while (courant != NULL)
+    {
+        printf("Valeur %d, Type: %d\n", courant->carte.valeur, courant->carte.type);
+        courant = courant->cartenext;
     }
-    return myList;
+    
 }
 
 
@@ -83,6 +87,7 @@ void shuffleList(struct listeCartes** head) {
         noeudJ->carte = temp;
     }
 }
+
 
 void affichage_main(struct listeCartes *premierecarte){ 
     int i=2;
@@ -167,4 +172,40 @@ void affichage_main(struct listeCartes *premierecarte){
         i+=1;
         nouvellecarte=nouvellecarte->cartenext;
     }
+
+
+
+struct listeCartes* CreationDeck(){
+    struct listeCartes* myList = NULL;
+    for(int i = 0; i < 4; i++){
+        for(int j = 1; j <= 13; j++){
+            append(&myList, j, i);
+        }
+    }
+    return myList;
+}
+
+int Init(){
+    struct listeCartes mainbanque;
+    struct joueur player;
+    struct listeCartes* head=CreationDeck();
+    shuffleList(head);
+}
+
+int valeurmain=0 ;
+int count(struct listeCartes* premierecarte){
+    valeurmain += premierecarte->carte.valeur;
+    struct listeCartes* nouvellecarte;
+    nouvellecarte = premierecarte->cartenext;
+    while (nouvellecarte != NULL ){
+        if (nouvellecarte->carte.valeur > 9){;
+            valeurmain += 10;
+        }
+        else{
+            valeurmain+= nouvellecarte->carte.valeur;
+        };
+        nouvellecarte = premierecarte->cartenext;
+    }
+    return valeurmain;
+
 }
