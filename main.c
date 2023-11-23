@@ -51,15 +51,6 @@ struct listeCartes* CreationDeck(){
 }
 
 
-void afficherList(struct listeCartes* tete){
-    struct listeCartes* courant = tete;
-    while (courant != NULL)
-    {
-        printf("Valeur %d, Type: %d\n", courant->carte.valeur, courant->carte.type);
-        courant = courant->cartenext;
-    }
-    
-}
 
 struct listeCartes* findNode(struct listeCartes* head, int index) {
     struct listeCartes* current = head;
@@ -90,5 +81,90 @@ void shuffleList(struct listeCartes** head) {
         struct Carte temp = noeudI->carte;
         noeudI->carte = noeudJ->carte;
         noeudJ->carte = temp;
+    }
+}
+
+void affichage_main(struct listeCartes *premierecarte){ 
+    int i=2;
+
+	struct listeCartes *nouvellecarte;
+    nouvellecarte=premierecarte->cartenext;
+    
+    printf("Voici la carte 1 :\n");
+    switch (  premierecarte->carte.type )
+        {
+
+            case 0:
+                printf("Couleur : CARREAU | ") ;
+                break;
+            case 1:
+                printf("Couleur : PIQUE | ") ;
+                break;
+            case 2:
+                printf("Couleur : COEUR | ") ;
+                break;
+            case 3:
+                printf("Couleur : TREFLE | ") ;
+                break;
+                
+            }
+
+            if(premierecarte->carte.valeur<=10){
+                printf("Valeur : %d \n",premierecarte->carte.valeur);
+            }
+            else{
+                
+                if(premierecarte->carte.valeur==11){
+                    printf("Valeur : VALET\n");
+                }
+                else if(premierecarte->carte.valeur==12){
+                    printf("Valeur : DAME\n");
+                }
+                else if(premierecarte->carte.valeur==13){
+                    printf("Valeur : ROI\n");
+                }
+            }  
+
+
+
+    while( nouvellecarte!= NULL){
+
+        printf("Voici la carte %d :\n",i);
+
+        switch ( nouvellecarte->carte.type )
+        {
+
+            case 0:
+                printf("Couleur : CARREAU | ") ;
+                break;
+            case 1:
+                printf("Couleur : PIQUE | ") ;
+                break;
+            case 2:
+                printf("Couleur : COEUR | ") ;
+                break;
+            case 3:
+                printf("Couleur : TREFLE | ") ;
+                break;
+                
+        }
+        if(nouvellecarte->carte.valeur<=10){
+            printf("Valeur : %d \n",nouvellecarte->carte.valeur);
+        }
+        else{
+            
+            if(nouvellecarte->carte.valeur==11){
+                printf("Valeur : VALET\n");
+            }
+            else if(nouvellecarte->carte.valeur==12){
+                printf("Valeur : DAME\n");
+            }
+            else if(nouvellecarte->carte.valeur==13){
+                printf("Valeur : ROI\n");
+            }
+        }  
+            
+        i+=1;
+        nouvellecarte=nouvellecarte->cartenext;
     }
 }
