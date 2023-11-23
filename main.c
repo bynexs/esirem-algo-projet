@@ -1,6 +1,10 @@
-#include <stdio.h> 
+
+#include <stdio.h> /*Autorise l'emploi de printf et de scanf.*/
+#include <stdlib.h>
+
 enum enum_color {CARREAU, PIQUE, COEUR, TREFLE};
 enum enum_joueur {CARTE=0,HIT=0,ARRETER=1,STAND=1,DOUBLE=2,ABANDONNER=3,SURREND=3};
+
 struct Carte{
     int valeur;
     enum enum_color type;
@@ -11,20 +15,16 @@ typedef struct listeCartes{
     struct listeCartes* cartenext;
 };
 
-
-typedef struct joueur{
-    struct listeCartes listeCartes;
-    int montant; 
-};
-
 // Fonction pour créer un nouveau nœud
 struct listeCartes* createNode(int valeur, int type) {
     struct listeCartes* newNode = (struct listeCartes*)malloc(sizeof(struct listeCartes));
     struct Carte carte;
     carte.type = type;
     carte.valeur = valeur;
+
     newNode->carte = carte;
     newNode->cartenext = NULL;
+
     return newNode;
 }
 
@@ -36,10 +36,13 @@ void append(struct listeCartes** head, int valeur, int type) {
         struct listeCartes* current = *head;
         while (current->cartenext != NULL) {
             current = current->cartenext;
+
         }
         current->cartenext = newNode;
     }
 }
+
+
 
 void afficherList(struct listeCartes* tete){
     struct listeCartes* courant = tete;
@@ -50,6 +53,8 @@ void afficherList(struct listeCartes* tete){
     }
     
 }
+
+
 
 struct listeCartes* findNode(struct listeCartes* head, int index) {
     struct listeCartes* current = head;
@@ -82,6 +87,91 @@ void shuffleList(struct listeCartes** head) {
         noeudJ->carte = temp;
     }
 }
+
+
+void affichage_main(struct listeCartes *premierecarte){ 
+    int i=2;
+
+	struct listeCartes *nouvellecarte;
+    nouvellecarte=premierecarte->cartenext;
+    
+    printf("Voici la carte 1 :\n");
+    switch (  premierecarte->carte.type )
+        {
+
+            case 0:
+                printf("Couleur : CARREAU | ") ;
+                break;
+            case 1:
+                printf("Couleur : PIQUE | ") ;
+                break;
+            case 2:
+                printf("Couleur : COEUR | ") ;
+                break;
+            case 3:
+                printf("Couleur : TREFLE | ") ;
+                break;
+                
+            }
+
+            if(premierecarte->carte.valeur<=10){
+                printf("Valeur : %d \n",premierecarte->carte.valeur);
+            }
+            else{
+                
+                if(premierecarte->carte.valeur==11){
+                    printf("Valeur : VALET\n");
+                }
+                else if(premierecarte->carte.valeur==12){
+                    printf("Valeur : DAME\n");
+                }
+                else if(premierecarte->carte.valeur==13){
+                    printf("Valeur : ROI\n");
+                }
+            }  
+
+
+
+    while( nouvellecarte!= NULL){
+
+        printf("Voici la carte %d :\n",i);
+
+        switch ( nouvellecarte->carte.type )
+        {
+
+            case 0:
+                printf("Couleur : CARREAU | ") ;
+                break;
+            case 1:
+                printf("Couleur : PIQUE | ") ;
+                break;
+            case 2:
+                printf("Couleur : COEUR | ") ;
+                break;
+            case 3:
+                printf("Couleur : TREFLE | ") ;
+                break;
+                
+        }
+        if(nouvellecarte->carte.valeur<=10){
+            printf("Valeur : %d \n",nouvellecarte->carte.valeur);
+        }
+        else{
+            
+            if(nouvellecarte->carte.valeur==11){
+                printf("Valeur : VALET\n");
+            }
+            else if(nouvellecarte->carte.valeur==12){
+                printf("Valeur : DAME\n");
+            }
+            else if(nouvellecarte->carte.valeur==13){
+                printf("Valeur : ROI\n");
+            }
+        }  
+            
+        i+=1;
+        nouvellecarte=nouvellecarte->cartenext;
+    }
 
 
 
@@ -117,4 +207,5 @@ int count(struct listeCartes* premierecarte){
         nouvellecarte = premierecarte->cartenext;
     }
     return valeurmain;
+
 }
