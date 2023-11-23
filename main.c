@@ -15,6 +15,12 @@ typedef struct listeCartes{
     struct listeCartes* cartenext;
 };
 
+typedef struct joueur{
+    struct listeCartes;
+    int montant;
+
+};
+
 // Fonction pour créer un nouveau nœud
 struct listeCartes* createNode(int valeur, int type) {
     struct listeCartes* newNode = (struct listeCartes*)malloc(sizeof(struct listeCartes));
@@ -173,7 +179,7 @@ void affichage_main(struct listeCartes *premierecarte){
         nouvellecarte=nouvellecarte->cartenext;
     }
 
-
+}
 
 struct listeCartes* CreationDeck(){
     struct listeCartes* myList = NULL;
