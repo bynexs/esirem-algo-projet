@@ -10,7 +10,6 @@ struct Carte{
 };
 
 typedef struct joueur{
-
     struct listeCartes* cartes;
     int montant;
 };
@@ -44,14 +43,14 @@ void append(struct listeCartes** head, int valeur, int type) {
     }
 }
 
-void affichage_main(struct listeCartes *premierecarte){ 
+void affichage_main(struct listeCartes* premierecarte, int multiply){ 
     int i=2;
 
 	struct listeCartes *nouvellecarte;
     nouvellecarte=premierecarte->cartenext;
     
     printf("Voici la carte 1 :\n");
-    switch (  premierecarte->carte.type )
+    switch (premierecarte->carte.type)
         {
 
             case 0:
@@ -70,7 +69,7 @@ void affichage_main(struct listeCartes *premierecarte){
             }
 
             if(premierecarte->carte.valeur<=10){
-                printf("Valeur : %d \n",premierecarte->carte.valeur);
+                printf("Valeur : %d \n", premierecarte->carte.valeur);
             }
             else{
                 
@@ -84,50 +83,48 @@ void affichage_main(struct listeCartes *premierecarte){
                     printf("Valeur : ROI\n");
                 }
             }  
+    if(multiply == 1){
+        while( nouvellecarte!= NULL){
 
+            printf("Voici la carte %d :\n",i);
 
+            switch ( nouvellecarte->carte.type )
+            {
 
-    while( nouvellecarte!= NULL){
-
-        printf("Voici la carte %d :\n",i);
-
-        switch ( nouvellecarte->carte.type )
-        {
-
-            case 0:
-                printf("Couleur : CARREAU | ") ;
-                break;
-            case 1:
-                printf("Couleur : PIQUE | ") ;
-                break;
-            case 2:
-                printf("Couleur : COEUR | ") ;
-                break;
-            case 3:
-                printf("Couleur : TREFLE | ") ;
-                break;
+                case 0:
+                    printf("Couleur : CARREAU | ") ;
+                    break;
+                case 1:
+                    printf("Couleur : PIQUE | ") ;
+                    break;
+                case 2:
+                    printf("Couleur : COEUR | ") ;
+                    break;
+                case 3:
+                    printf("Couleur : TREFLE | ") ;
+                    break;
+                    
+            }
+            if(nouvellecarte->carte.valeur<=10){
+                printf("Valeur : %d \n",nouvellecarte->carte.valeur);
+            }
+            else{
                 
+                if(nouvellecarte->carte.valeur==11){
+                    printf("Valeur : VALET\n");
+                }
+                else if(nouvellecarte->carte.valeur==12){
+                    printf("Valeur : DAME\n");
+                }
+                else if(nouvellecarte->carte.valeur==13){
+                    printf("Valeur : ROI\n");
+                }
+            }  
+                
+            i+=1;
+            nouvellecarte=nouvellecarte->cartenext;
         }
-        if(nouvellecarte->carte.valeur<=10){
-            printf("Valeur : %d \n",nouvellecarte->carte.valeur);
-        }
-        else{
-            
-            if(nouvellecarte->carte.valeur==11){
-                printf("Valeur : VALET\n");
-            }
-            else if(nouvellecarte->carte.valeur==12){
-                printf("Valeur : DAME\n");
-            }
-            else if(nouvellecarte->carte.valeur==13){
-                printf("Valeur : ROI\n");
-            }
-        }  
-            
-        i+=1;
-        nouvellecarte=nouvellecarte->cartenext;
     }
-
 }
 
 struct listeCartes* CreationDeck(){
@@ -144,7 +141,7 @@ int Init(){
     struct listeCartes mainbanque;
     struct joueur player;
     struct listeCartes* head=CreationDeck();
-    shuffleList(head);
+    //shuffleList(head);
 }
 
 void afficherList(struct listeCartes* tete){
@@ -203,44 +200,35 @@ struct Carte tirageCartes(struct listeCartes** deskhead){
     return carte;
 }
 
-int main(){
-    struct listeCartes* courant = CreationDeck();
-    shuffleList(&courant);
-    struct Carte courant2 = tirageCartes(&courant);
-    afficherList(courant);
-}
-
-int valeurmain=0 ;
-
 int count(struct listeCartes* premierecarte){
+    int valeurmain = 0;
     valeurmain += premierecarte->carte.valeur;
     struct listeCartes* nouvellecarte;
     nouvellecarte = premierecarte->cartenext;
-    while (nouvellecarte != NULL ){
+    while (nouvellecarte != NULL){
         if (nouvellecarte->carte.valeur > 9){;
             valeurmain += 10;
         }
         else{
             valeurmain+= nouvellecarte->carte.valeur;
         };
-        nouvellecarte = premierecarte->cartenext;
+        nouvellecarte = nouvellecarte->cartenext;
     }
     return valeurmain;
-
 }
 
 int traitement_saisie(char str[]){
 
-    if(str=="CARTE" || str=="HIT"){
+    if(strcmp("CARTE", str) || strcmp("HIT", str)){
         return 0;
     }
-    else if(str=="ARRETER" || str=="STAND"){
+    else if(strcmp("ARRETER", str) || strcmp("STAND", str)){
         return 1;
     }
-    else if(str=="DOUBLE"){
+    else if(strcmp("DOUBLE", str)){
         return 2;
     }
-    else if(str=="ABANDONNER" || str=="SURREND"){
+    else if(strcmp("ABANDONNER", str) || strcmp("SURRENDER", str)){
         return 3;
     }
     else{
@@ -249,23 +237,65 @@ int traitement_saisie(char str[]){
 
 }
 
-void logique_jeu(){
+int main(){
     int credit=100;
     int mise=10;
     int montant;
     
-    struct listeCartes mainbanque;
+    struct joueur banque;
     struct joueur player;
-    struct listeCartes* head=CreationDeck();
-    shuffleList(head);
 
-    while(credit>=10){
-        for(int i=0;i<3;i++){
-            player.listeCartes=tirageCartes();
+    struct listeCartes* mainjoueurlistcarte = NULL;
+    struct listeCartes* mainbanquelistcarte = NULL;
+    struct listeCartes* head = CreationDeck();
+    shuffleList(&head);
+    
+    struct Carte temps;
+    for(int i=0;i<4;i++){
+        if((i%2) == 0){
+            struct Carte carte = tirageCartes(&head);
+            append(&mainjoueurlistcarte, carte.valeur, carte.type);
+        }else{
+            struct Carte carte = tirageCartes(&head);
+            append(&mainbanquelistcarte, carte.valeur, carte.type);
         }
-
-
     }
 
+    affichage_main(mainjoueurlistcarte, 1);
+    affichage_main(mainbanquelistcarte, 0);
 
+    int compteurMainJoueur = count(mainjoueurlistcarte);
+    int compteurMainBanque = count(mainbanquelistcarte);
+    char str[20];
+    printf("Que veux tu faire ?\n");
+    scanf("%s", &str);
+    int choix = traitement_saisie(str);
+    while(compteurMainJoueur < 21 && choix != 1 && choix != 3){
+        printf("%d", choix);
+        if(choix == 0){
+            struct Carte carte = tirageCartes(&head);
+            append(&mainjoueurlistcarte, carte.valeur, carte.type);
+            affichage_main(mainjoueurlistcarte, 1);
+        }
+        if(compteurMainBanque < 17){
+            struct Carte carte = tirageCartes(&head);
+            append(&mainbanquelistcarte, carte.valeur, carte.type);
+        }
+        compteurMainJoueur = count(mainjoueurlistcarte);
+        compteurMainBanque = count(mainbanquelistcarte);
+        if(compteurMainJoueur < 21 && choix != 1 && choix != 3){
+            printf("Que veux tu faire ?");
+            char repioche[20];
+            scanf("%s", &repioche);
+        }
+    }
+
+    affichage_main(mainjoueurlistcarte, 1);
+    affichage_main(mainbanquelistcarte, 1);
+    
+    if(compteurMainJoueur > compteurMainBanque){
+        printf("joueur a gagné");
+    }else if(compteurMainJoueur < compteurMainBanque){
+        printf("Banque a gagné");
+    }
 }
