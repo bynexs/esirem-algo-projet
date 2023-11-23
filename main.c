@@ -1,4 +1,3 @@
-
 #include <stdio.h> /*Autorise l'emploi de printf et de scanf.*/
 #include <stdlib.h>
 
@@ -10,16 +9,15 @@ struct Carte{
     enum enum_color type;
 };
 
+typedef struct joueur{
+    struct listeCartes* cartes;
+    int montant;
+};
+
 typedef struct listeCartes{
     struct Carte carte;
     struct listeCartes* cartenext;
-};
-
-typedef struct joueur{
-    struct listeCartes;
-    int montant;
-
-};
+}listeCartes;
 
 // Fonction pour créer un nouveau nœud
 struct listeCartes* createNode(int valeur, int type) {
@@ -30,9 +28,7 @@ struct listeCartes* createNode(int valeur, int type) {
 
     newNode->carte = carte;
     newNode->cartenext = NULL;
-
-    return newNode;
-}
+};
 
 void append(struct listeCartes** head, int valeur, int type) {
     struct listeCartes* newNode = createNode(valeur, type);
@@ -42,58 +38,10 @@ void append(struct listeCartes** head, int valeur, int type) {
         struct listeCartes* current = *head;
         while (current->cartenext != NULL) {
             current = current->cartenext;
-
         }
         current->cartenext = newNode;
     }
 }
-
-
-
-void afficherList(struct listeCartes* tete){
-    struct listeCartes* courant = tete;
-    while (courant != NULL)
-    {
-        printf("Valeur %d, Type: %d\n", courant->carte.valeur, courant->carte.type);
-        courant = courant->cartenext;
-    }
-    
-}
-
-
-
-struct listeCartes* findNode(struct listeCartes* head, int index) {
-    struct listeCartes* current = head;
-    for (int i = 0; i < index && current != NULL; i++) {
-        current = current->cartenext;
-    }
-    return current;
-}
-
-void shuffleList(struct listeCartes** head) {
-    if (*head == NULL || (*head)->cartenext == NULL) {
-        return; // Rien à mélanger.
-    }
-
-    int count = 0;
-    struct listeCartes* current = *head;
-    while (current != NULL) {
-        count++;
-        current = current->cartenext;
-    }
-    
-    for (int i = count - 1; i > 0; i--) {
-        int j = rand() % (i + 1);
-
-        struct listeCartes* noeudI = findNode(*head, i);
-        struct listeCartes* noeudJ = findNode(*head, j);
-
-        struct Carte temp = noeudI->carte;
-        noeudI->carte = noeudJ->carte;
-        noeudJ->carte = temp;
-    }
-}
-
 
 void affichage_main(struct listeCartes *premierecarte){ 
     int i=2;
@@ -196,6 +144,69 @@ int Init(){
     struct joueur player;
     struct listeCartes* head=CreationDeck();
     shuffleList(head);
+}
+
+void afficherList(struct listeCartes* tete){
+    struct listeCartes* courant = tete;
+    while (courant != NULL)
+    {
+        printf("Valeur %d, Type: %d\n", courant->carte.valeur, courant->carte.type);
+        courant = courant->cartenext;
+    }
+    
+}
+
+struct listeCartes* findNode(struct listeCartes* head, int index) {
+    struct listeCartes* current = head;
+    for (int i = 0; i < index && current != NULL; i++) {
+        current = current->cartenext;
+    }
+    return current;
+}
+
+void shuffleList(struct listeCartes** head) {
+    if (*head == NULL || (*head)->cartenext == NULL) {
+        return; // Rien à mélanger.
+    }
+
+    int count = 0;
+    struct listeCartes* current = *head;
+    while (current != NULL) {
+        count++;
+        current = current->cartenext;
+    }
+
+    for (int i = count - 1; i > 0; i--) {
+        int j = rand() % (i + 1);
+
+        struct listeCartes* noeudI = findNode(*head, i);
+        struct listeCartes* noeudJ = findNode(*head, j);
+
+        struct Carte temp = noeudI->carte;
+        noeudI->carte = noeudJ->carte;
+        noeudJ->carte = temp;
+    }
+}
+
+struct Carte tirageCartes(struct listeCartes** deskhead){
+    struct listeCartes* courant = *deskhead;
+    struct listeCartes* temps = *deskhead;
+    while (courant->cartenext != NULL)
+    {
+        temps = courant;
+        courant = courant->cartenext;
+    }
+    temps->cartenext = NULL;
+    struct Carte carte = courant->carte;
+    free(courant);
+    return carte;
+}
+
+int main(){
+    struct listeCartes* courant = CreationDeck();
+    shuffleList(&courant);
+    struct Carte courant2 = tirageCartes(&courant);
+    afficherList(courant);
 }
 
 int valeurmain=0 ;
