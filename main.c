@@ -10,6 +10,7 @@ struct Carte{
 };
 
 typedef struct joueur{
+
     struct listeCartes* cartes;
     int montant;
 };
@@ -210,6 +211,7 @@ int main(){
 }
 
 int valeurmain=0 ;
+
 int count(struct listeCartes* premierecarte){
     valeurmain += premierecarte->carte.valeur;
     struct listeCartes* nouvellecarte;
@@ -224,5 +226,46 @@ int count(struct listeCartes* premierecarte){
         nouvellecarte = premierecarte->cartenext;
     }
     return valeurmain;
+
+}
+
+int traitement_saisie(char str[]){
+
+    if(str=="CARTE" || str=="HIT"){
+        return 0;
+    }
+    else if(str=="ARRETER" || str=="STAND"){
+        return 1;
+    }
+    else if(str=="DOUBLE"){
+        return 2;
+    }
+    else if(str=="ABANDONNER" || str=="SURREND"){
+        return 3;
+    }
+    else{
+        return 10; //Pour indiquer que l'utilisateur a rentré une mauvaise saisie
+    }
+
+}
+
+void logique_jeu(){
+    int credit=100;
+    int mise=10;
+    int montant;
+    
+    struct listeCartes mainbanque;
+    struct joueur player;
+    struct listeCartes* head=CreationDeck();
+    shuffleList(head);
+
+    while(credit>=10){
+        for(int i=0;i<3;i++){
+            player.listeCartes=tirageCartes();
+        }
+
+
+    }
+
 
 }
