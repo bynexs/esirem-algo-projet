@@ -1,9 +1,8 @@
-#include <stdio.h> 
-
+#include <stdio.h> /*Autorise l'emploi de printf et de scanf.*/
+#include <stdlib.h>
 
 enum enum_color {CARREAU, PIQUE, COEUR, TREFLE};
-
-enum enum_joueur {CARTE=0,HIT=0,ARRETER=1,STAND=1,DOUBLE=2,ABANDONNER=3,SURREND=3};
+int compteur = 0;
 
 struct Carte{
     int valeur;
@@ -11,29 +10,106 @@ struct Carte{
 };
 
 typedef struct listeCartes{
+    struct Carte carte;
+    struct listeCartes* cartenext;
+}listeCartes;
 
-    struct Carte carte[52];
-};
+// Fonction pour créer un nouveau nœud
+struct listeCartes* createNode(int valeur, int type) {
+    struct listeCartes* newNode = (struct listeCartes*)malloc(sizeof(struct listeCartes));
+    struct Carte carte;
+    carte.type = type;
+    carte.valeur = valeur;
 
-int CreationDeck(){
-    struct listeCartes listecarte;
-    int compt  = 0;
-    for(int i = 0; i < 4; i++){
-        for(int j = 1; j <= 13; j++){
-            struct Carte carte;
-            carte.valeur = j;
-            carte.type = i;
-            listecarte.carte[compt] = carte;
-            compt ++;
+    newNode->carte = carte;
+    newNode->cartenext = NULL;
+
+    return newNode;
+}
+
+void append(struct listeCartes** head, int valeur, int type) {
+    struct listeCartes* newNode = createNode(valeur, type);
+    if (*head == NULL) {
+        *head = newNode;
+    } else {
+        struct listeCartes* current = *head;
+        while (current->cartenext != NULL) {
+            current = current->cartenext;
         }
+        current->cartenext = newNode;
     }
 }
-    struct Carte carte[];
-};
+
+struct listeCartes* CreationDeck(){
+    struct listeCartes* myList = NULL;
+    for(int i = 0; i < 4; i++){
+        for(int j = 1; j <= 13; j++){
+            append(&myList, j, i);
+        }
+    }
+    return myList;
+}
 
 
-typedef struct joueur{
-    struct listeCartes;
-    int montant;
+void afficherList(struct listeCartes* tete){
+    struct listeCartes* courant = tete;
+    while (courant != NULL)
+    {
+        printf("Valeur %d, Type: %d\n", courant->carte.valeur, courant->carte.type);
+        courant = courant->cartenext;
+    }
     
-};
+}
+
+struct listeCartes* findNode(struct listeCartes* head, int index) {
+    struct listeCartes* current = head;
+    for (int i = 0; i < index && current != NULL; i++) {
+        current = current->cartenext;
+    }
+    return current;
+}
+
+void shuffleList(struct listeCartes** head) {
+    if (*head == NULL || (*head)->cartenext == NULL) {
+        return; // Rien à mélanger.
+    }
+
+    int count = 0;
+    struct listeCartes* current = *head;
+    while (current != NULL) {
+        count++;
+        current = current->cartenext;
+    }
+
+    for (int i = count - 1; i > 0; i--) {
+        int j = rand() % (i + 1);
+
+        struct listeCartes* noeudI = findNode(*head, i);
+        struct listeCartes* noeudJ = findNode(*head, j);
+
+        struct Carte temp = noeudI->carte;
+        noeudI->carte = noeudJ->carte;
+        noeudJ->carte = temp;
+    }
+}
+
+struct Carte tirageCartes(struct listeCartes** deskhead){
+    struct listeCartes* courant = *deskhead;
+    struct listeCartes* temps = *deskhead;
+    while (courant->cartenext != NULL)
+    {
+        temps = courant;
+        courant = courant->cartenext;
+    }
+    temps->cartenext = NULL;
+    struct Carte carte = courant->carte;
+    free(courant);
+    return carte;
+}
+
+int main(){
+    struct listeCartes* courant = CreationDeck();
+    shuffleList(&courant);
+    struct Carte courant2 = tirageCartes(&courant);
+    afficherList(courant);
+}
