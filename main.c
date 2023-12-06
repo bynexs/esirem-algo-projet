@@ -1,6 +1,7 @@
 #include <stdio.h> /*Autorise l'emploi de printf et de scanf.*/
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 enum enum_color {CARREAU, PIQUE, COEUR, TREFLE};
 enum enum_joueur {CARTE=0,HIT=0,ARRETER=1,STAND=1,DOUBLE=2,ABANDONNER=3,SURREND=3};
@@ -164,6 +165,9 @@ struct listeCartes* findNode(struct listeCartes* head, int index) {
 }
 
 void shuffleList(struct listeCartes** head) {
+
+    srand(time(NULL));
+    
     if (*head == NULL || (*head)->cartenext == NULL) {
         return; // Rien à mélanger.
     }
@@ -260,9 +264,9 @@ int main(){
     struct listeCartes* mainbanquelistcarte = NULL;
     struct listeCartes* head = CreationDeck();
 
-    for(int i=0;i<5;i++){
-        shuffleList(&head);
-    }
+    
+
+    shuffleList(&head);
     
     struct Carte temps;
     for(int i=0;i<4;i++){
