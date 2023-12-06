@@ -1,5 +1,6 @@
 #include <stdio.h> /*Autorise l'emploi de printf et de scanf.*/
 #include <stdlib.h>
+#include <string.h>
 
 enum enum_color {CARREAU, PIQUE, COEUR, TREFLE};
 enum enum_joueur {CARTE=0,HIT=0,ARRETER=1,STAND=1,DOUBLE=2,ABANDONNER=3,SURREND=3};
@@ -12,7 +13,7 @@ struct Carte{
 typedef struct joueur{
     struct listeCartes* cartes;
     int montant;
-};
+}joueur;
 
 typedef struct listeCartes{
     struct Carte carte;
@@ -202,9 +203,18 @@ struct Carte tirageCartes(struct listeCartes** deskhead){
 
 int count(struct listeCartes* premierecarte){
     int valeurmain = 0;
-    valeurmain += premierecarte->carte.valeur;
+
+    if (premierecarte->carte.valeur > 9){;
+        valeurmain += 10;
+    }
+    else{
+        valeurmain+= premierecarte->carte.valeur;
+    };
+    
+
     struct listeCartes* nouvellecarte;
     nouvellecarte = premierecarte->cartenext;
+
     while (nouvellecarte != NULL){
         if (nouvellecarte->carte.valeur > 9){;
             valeurmain += 10;
@@ -219,16 +229,16 @@ int count(struct listeCartes* premierecarte){
 
 int traitement_saisie(char str[]){
 
-    if(strcmp("CARTE", str) || strcmp("HIT", str)){
+    if(strcmp("CARTE", str)==0 || strcmp("HIT", str)==0){
         return 0;
     }
-    else if(strcmp("ARRETER", str) || strcmp("STAND", str)){
+    else if(strcmp("ARRETER", str)==0 || strcmp("STAND", str)==0){
         return 1;
     }
-    else if(strcmp("DOUBLE", str)){
+    else if(strcmp("DOUBLE", str)==0){
         return 2;
     }
-    else if(strcmp("ABANDONNER", str) || strcmp("SURRENDER", str)){
+    else if(strcmp("ABANDONNER", str)==0 || strcmp("SURRENDER", str)==0){
         return 3;
     }
     else{
@@ -238,6 +248,7 @@ int traitement_saisie(char str[]){
 }
 
 int main(){
+
     int credit=100;
     int mise=10;
     int montant;
@@ -248,7 +259,10 @@ int main(){
     struct listeCartes* mainjoueurlistcarte = NULL;
     struct listeCartes* mainbanquelistcarte = NULL;
     struct listeCartes* head = CreationDeck();
-    shuffleList(&head);
+
+    for(int i=0;i<5;i++){
+        shuffleList(&head);
+    }
     
     struct Carte temps;
     for(int i=0;i<4;i++){
@@ -260,8 +274,9 @@ int main(){
             append(&mainbanquelistcarte, carte.valeur, carte.type);
         }
     }
-
+    printf("Voici la main du joueur\n");
     affichage_main(mainjoueurlistcarte, 1);
+    printf("Voici la main de la Banque\n");
     affichage_main(mainbanquelistcarte, 0);
 
     int compteurMainJoueur = count(mainjoueurlistcarte);
@@ -271,31 +286,48 @@ int main(){
     scanf("%s", &str);
     int choix = traitement_saisie(str);
     while(compteurMainJoueur < 21 && choix != 1 && choix != 3){
-        printf("%d", choix);
+        
         if(choix == 0){
             struct Carte carte = tirageCartes(&head);
             append(&mainjoueurlistcarte, carte.valeur, carte.type);
+            printf("Voici la main du joueur\n");
             affichage_main(mainjoueurlistcarte, 1);
         }
-        if(compteurMainBanque < 17){
-            struct Carte carte = tirageCartes(&head);
-            append(&mainbanquelistcarte, carte.valeur, carte.type);
-        }
+        
         compteurMainJoueur = count(mainjoueurlistcarte);
-        compteurMainBanque = count(mainbanquelistcarte);
+        
         if(compteurMainJoueur < 21 && choix != 1 && choix != 3){
             printf("Que veux tu faire ?");
-            char repioche[20];
-            scanf("%s", &repioche);
+            scanf("%s", &str);
+            choix = traitement_saisie(str);
         }
     }
+    while(compteurMainBanque < 17){
+            struct Carte carte = tirageCartes(&head);
+            append(&mainbanquelistcarte, carte.valeur, carte.type);
+            compteurMainBanque = count(mainbanquelistcarte);
+    }
+    printf("%d\n",compteurMainBanque);
+    
+    if(compteurMainJoueur>21){
+        compteurMainJoueur=0;
+    }
+    if(compteurMainBanque>21){
+        compteurMainBanque=0;
+    }
 
+    printf("Voici la main du joueur\n");
     affichage_main(mainjoueurlistcarte, 1);
+    printf("Voici la main de la banque\n");
     affichage_main(mainbanquelistcarte, 1);
     
     if(compteurMainJoueur > compteurMainBanque){
         printf("joueur a gagné");
-    }else if(compteurMainJoueur < compteurMainBanque){
+    }
+    else if(compteurMainJoueur < compteurMainBanque){
         printf("Banque a gagné");
+    }
+    else{
+        printf("égalité");
     }
 }
